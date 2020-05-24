@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: couchdb-app
+  labels:
+    app: couchdb-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: couchdb-app
+  template:
+    metadata:
+      labels:
+        app: couchdb-app
+    spec:
+      containers:
+      - name: couchdb-app
+        image: apache/couchdb:latest
+        env:
+        - name: COUCHDB_USER
+          value: admin
+        - name: COUCHDB_PASSWORD
+          value: admin
+        ports:
+          - containerPort: 5984
+      nodeName: {NODE_NAME}
+---          
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: couchdb-app
+  name: couchdb-app-svc
+spec:
+  ports:
+  - nodePort: 30598
+    port: 5984
+    protocol: TCP
+    targetPort: 5984
+  selector:
+    app: couchdb-app
+  type: NodePort

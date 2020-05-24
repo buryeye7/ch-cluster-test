@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hdac-node{NO}
+  labels:
+    app: hdac-node{NO}
+spec:
+  selector:
+    matchLabels:
+      app: hdac-node{NO}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hdac-node{NO}
+    spec:
+      containers:
+        - name: hdac-node{NO}
+          image: buryeye7/hdac-node:latest
+          command: ["./scripts/start-node.sh"]
+          env:
+            - name: TARGET
+              value: {TARGET} 
+            - name: WALLET_ALIAS
+              value: {WALLET_ALIAS}
+          ports:
+            - name: rpc
+              containerPort: 26657
+              protocol: TCP
+            - name: network
+              containerPort: 26656
+              protocol: TCP
+            - name: clif
+              containerPort: 1317
+              protocol: TCP
+            - name: prometheus
+              containerPort: 26660
+              protocol: TCP
+      nodeName: {NODE_NAME}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hdac-node{NO}
+spec:
+  type: LoadBalancer
+  selector:
+    app: hdac-node{NO}
+  ports:
+    - protocol: TCP
+      port: 1317
+      targetPort: 1317

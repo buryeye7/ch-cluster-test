@@ -1,0 +1,6 @@
+couchdb 13.124.178.40
+hdac-seed 54.180.160.150
+hdac-node 13.125.141.180
+hdac-node 13.124.205.121
+prometheus 13.209.82.70
+grafana 13.125.57.162

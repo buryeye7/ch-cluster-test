@@ -1,0 +1,7 @@
+{
+  "type": "tendermint/fridayFilePVState",
+  "value": {
+    "height_sign_states": {},
+    "immutable_height": 0
+  }
+}

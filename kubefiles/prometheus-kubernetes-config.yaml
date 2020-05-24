@@ -1,0 +1,24 @@
+global:
+ scrape_interval: 1s
+
+scrape_configs:
+  - job_name: 'hdac-node1'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['100.96.1.18:26660']
+  - job_name: 'hdac-node2'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['100.96.2.4:26660']
+  - job_name: 'hdac-node3'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['100.96.6.3:26660']
+  - job_name: 'hdac-node4'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['100.96.4.5:26660']
+  - job_name: 'hdac-node5'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['100.96.2.3:26660']
