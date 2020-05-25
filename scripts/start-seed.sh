@@ -3,6 +3,11 @@
 COUCHDB="http://admin:admin@couchdb-app-svc:5984"
 SRC="$GOPATH/src/friday"
 
+cp -rf $GOPATH/src/ch-cluster-test/config/gaiad-config/* $HOME/.gaiad
+cp -rf $GOPATH/src/ch-cluster-test/config/gaiacli-config/* $HOME/.gaiacli
+
+gaiacli config chain-id testnet
+
 ps -ef | grep nodef | while read line
 do
     if [[ $line == *"gaiad"* ]];then
@@ -11,7 +16,7 @@ do
     fi
 done
 
-NODE_ID=$(nodef tendermint show-node-id)
+NODE_ID=$(gaiad tendermint show-node-id)
 IP_ADDRESS=$(hostname -I)
 IP_ADDRESS=$(echo $IP_ADDRESS)
 
@@ -19,9 +24,25 @@ curl -X PUT $COUCHDB/seed-info/seed-info -d "{\"target\":\"${NODE_ID}@${IP_ADDRE
 
 for i in $(seq 1 $WALLET_CNT)
 do
-    wallet_address=$(clif keys show node$i -a)
+    expect -c "
+    spawn gaiacli keys show node$i -a
+    expect "passphrase:"
+    send \"$PW\\r\"
+    expect eof
+    " > /tmp/node_address
+
+    wallet_address=""
+    while read line
+    do
+        if [[ "$line" == *"cosmos"* ]];then
+            echo $line
+            wallet_address=$line
+            break
+        fi
+    done < /tmp/node_address
+    wallet_address=$(echo $ADDRESS | sed "s/\n//g" | sed "s/\r//g")
     curl -X PUT $COUCHDB/seed-wallet-info/$wallet_address -d "{\"wallet_alias\":\"node$i\"}"
 done
 
-clif rest-server --laddr tcp://0.0.0.0:1317 > clif.txt 2>&1 &
-nodef start 2>/dev/null
+gaiacli rest-server --laddr tcp://0.0.0.0:1317 > gaiacli.txt 2>&1 &
+gaiad start 2>/dev/null
