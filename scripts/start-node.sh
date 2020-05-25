@@ -1,7 +1,6 @@
 #!/bin/bash
 
 COUCHDB="http://admin:admin@couchdb-app-svc:5984"
-SRC="$GOPATH/src/friday"
 rm -rf $HOME/.gaiad
 rm -rf $HOME/.gaiacli
 
@@ -29,7 +28,7 @@ send \"$PW\\r\"
 expect eof
 "
 
-cp -f $GOPATH/src/friday-cluster-test/config/gaiad-config/config/genesis.json $HOME/.gaiad/config
+cp -f $GOPATH/src/ch-cluster-test/config/gaiad-config/config/genesis.json $HOME/.gaiad/config
 
 SEED=$(curl $COUCHDB/seed-info/seed-info | jq .target)
 sed -i "s/seeds = \"\"/seeds = $SEED/g" $HOME/.gaiad/config/config.toml
@@ -51,6 +50,7 @@ do
         break
     fi
 done < /tmp/node_address
+
 WALLET_ADDRESS=$(echo $WALLET_ADDRESS | sed "s/\n//g" | sed "s/\r//g")
 NODE_PUB_KEY=$(gaiad tendermint show-validator)
 NODE_ID=$(gaiad tendermint show-node-id)

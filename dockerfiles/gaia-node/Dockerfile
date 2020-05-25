@@ -1,4 +1,4 @@
-FROM buryeye7/hdac-base
+FROM buryeye7/gaia-base
 
 USER root
 ENV HOME=/root

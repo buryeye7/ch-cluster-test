@@ -123,11 +123,13 @@ curl -X PUT $COUCHDB/wallet-address
 curl -X PUT $COUCHDB/input-address
 curl -X PUT $COUCHDB/seed-wallet-info
 
-for i in {1..20}
-do
-    data=$(../gaiapy/make-wallet.py)
-    curl -X PUT $COUCHDB/input-address/$i -d "$data"  
-done 
+if false;then
+    for i in {1..20}
+    do
+        data=$(../hdacpy/make-wallet.py)
+        curl -X PUT $COUCHDB/input-address/$i -d "$data"  
+    done 
+fi
 
 INDEX=$((INDEX + 1))
 cat ./gaia-seed-desc/gaia-seed-template.yaml | sed "s/{NODE_NAME}/${NAME_ARRAY[$INDEX]}/g" | sed "s/{TARGET}/${TARGET}/g" | sed "s/{WALLET_CNT}/\"$HDAC_NODE_NO_WITH_SEED\"/g" > ./gaia-seed-desc/gaia-seed.yaml

@@ -1,7 +1,6 @@
 #!/bin/bash
 
 COUCHDB="http://admin:admin@couchdb-app-svc:5984"
-SRC="$GOPATH/src/friday"
 
 cp -rf $GOPATH/src/ch-cluster-test/config/gaiad-config/* $HOME/.gaiad
 cp -rf $GOPATH/src/ch-cluster-test/config/gaiacli-config/* $HOME/.gaiacli

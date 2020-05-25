@@ -88,6 +88,7 @@ do
     sleep 10
 done
 
+if false;then
 COUNT=$(curl $COUCHDB/input-address/_all_docs 2>/dev/null | jq '.rows | length')
 COUNT=$((COUNT - 1))
 PRIV_KEYS=()
@@ -108,6 +109,7 @@ do
     echo ${PRIV_KEYS[$i]}
     sleep 10
 done
+fi
 
 wait_lb_ready
 
