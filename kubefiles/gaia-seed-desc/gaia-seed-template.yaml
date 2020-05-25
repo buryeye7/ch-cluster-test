@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hdac-seed
+  name: gaia-seed
 spec:
   selector:
     matchLabels:
-      run: hdac-seed
+      run: gaia-seed
   replicas: 1
   template:
     metadata:
       labels:
-        run: hdac-seed
+        run: gaia-seed
     spec:
       containers:
-        - name: hdac-seed
-          image: buryeye7/hdac-seed:latest
+        - name: gaia-seed
+          image: buryeye7/gaia-seed:latest
           env:
             - name: COUCHDB
               value: couchdb-app-svc
