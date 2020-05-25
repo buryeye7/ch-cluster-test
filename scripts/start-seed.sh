@@ -2,6 +2,9 @@
 
 COUCHDB="http://admin:admin@couchdb-app-svc:5984"
 
+mkdir -p $HOME/.gaiad
+mkdir -p $HOME/.gaiacli
+
 cp -rf $GOPATH/src/ch-cluster-test/config/gaiad-config/* $HOME/.gaiad
 cp -rf $GOPATH/src/ch-cluster-test/config/gaiacli-config/* $HOME/.gaiacli
 sed -i "s/prometheus = false/prometheus = true/g" $HOME/.gaiad/config/config.toml
