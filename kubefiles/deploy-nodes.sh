@@ -1,22 +1,5 @@
 #!/bin/bash
 
-if [ $# == 0 ];then
-    echo "Please input param, friday or tendermint"
-    exit 0
-fi
-
-if [ $1 != "friday" -a $1 != "tendermint" ];then
-    echo "Please input param, friday or tendermint"
-    exit 0
-fi
-
-TARGET=""
-if [ $1 == "friday" ];then 
-    TARGET="friday"
-else
-    TARGET="tendermint"
-fi
-    
 FILE_NO=$(ls -l hdac-node-descs | grep ^- | wc -l)
 FILE_NO=$(($FILE_NO -1))
 TOTAL_NO=$(kubectl get nodes | wc -l)

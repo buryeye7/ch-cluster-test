@@ -1,13 +1,13 @@
 #!/bin/bash
 
-cd hdac-seed
+cd gaia-seed
 pwd
-docker build --no-cache --tag buryeye7/hdac-seed:latest .
-docker push buryeye7/hdac-seed:latest
+docker build --no-cache --tag buryeye7/gaia-seed:latest .
+docker push buryeye7/gaia-seed:latest
 
 cd ..
-cd hdac-node
+cd gaia-node
 pwd
-docker build --no-cache --tag buryeye7/hdac-node:latest .
-docker push buryeye7/hdac-node:latest
+docker build --no-cache --tag buryeye7/gaia-node:latest .
+docker push buryeye7/gaia-node:latest
 

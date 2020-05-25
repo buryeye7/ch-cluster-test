@@ -2,72 +2,61 @@
 
 COUCHDB="http://admin:admin@couchdb-app-svc:5984"
 SRC="$GOPATH/src/friday"
-rm -rf $HOME/.nodef/config
-rm -rf $HOME/.nodef/data
-rm -rf $HOME/.clif
+rm -rf $HOME/.gaiad
+rm -rf $HOME/.gaiacli
 
-ps -ef | grep grpc | while read line
+ps -ef | grep gaiad | while read line
 do
-    if [[ $line == *"CasperLabs"* ]];then
-        target=$(echo $line |  awk -F' ' '{print $2}')
-        kill -9 $target
-    fi
-done
-
-ps -ef | grep nodef | while read line
-do
-    if [[ $line == *"nodef"* ]];then
+    if [[ $line == *"gaiad"* ]];then
         target=$(echo $line |  awk -F' ' '{print $2}')
         kill -9 $target
     fi
 done
 
 # run execution engine grpc server
-$SRC/CasperLabs/execution-engine/target/release/casperlabs-engine-grpc-server -z -t 8 $HOME/.casperlabs/.casper-node.sock&
-
-if [ $TARGET == "friday" ];then
-    nodef init testnode friday --chain-id testnet
-else
-    nodef init testnode tendermint --chain-id testnet
-fi
+gaiad init --chain-id testnet testnet
 
 # create a wallet key
 PW="12345678"
 
 expect -c "
 set timeout 3
-spawn clif keys add node
-expect "disk:"
-    send \"$PW\\r\"
+spawn gaiacli keys add node
 expect "passphrase:"
-    send \"$PW\\r\"
+send \"$PW\\r\"
+expect "passphrase:"
+send \"$PW\\r\"
 expect eof
 "
 
-# apply default clif configure
-clif config chain-id testnet
-clif config output json
-clif config indent true
-clif config trust-node true
+cp -f $GOPATH/src/friday-cluster-test/config/gaiad-config/config/genesis.json $HOME/.gaiad/config
 
-if [ $TARGET == "friday" ];then
-    cp -f $GOPATH/src/friday-cluster-test/config/ulb-node-config/nodef-config/config/genesis.json $HOME/.nodef/config
-    cp -f $GOPATH/src/friday-cluster-test/config/ulb-node-config/nodef-config/config/manifest.toml $HOME/.nodef/config
-else
-    cp -f $GOPATH/src/friday-cluster-test/config/node-config/nodef-config/config/genesis.json $HOME/.nodef/config
-    cp -f $GOPATH/src/friday-cluster-test/config/node-config/nodef-config/config/manifest.toml $HOME/.nodef/config
-fi
-
-#SEED=$(cat $HOME/.nodef/config/genesis.json | jq .app_state.genutil.gentxs[0].value.memo)
 SEED=$(curl $COUCHDB/seed-info/seed-info | jq .target)
-sed -i "s/seeds = \"\"/seeds = $SEED/g" $HOME/.nodef/config/config.toml
-sed -i "s/prometheus = false/prometheus = true/g" $HOME/.nodef/config/config.toml
+sed -i "s/seeds = \"\"/seeds = $SEED/g" $HOME/.gaiad/config/config.toml
+sed -i "s/prometheus = false/prometheus = true/g" $HOME/.gaiad/config/config.toml
 
-WALLET_ADDRESS=$(clif keys show node -a)
-NODE_PUB_KEY=$(nodef tendermint show-validator)
-NODE_ID=$(nodef tendermint show-node-id)
+expect -c "
+spawn gaiacli keys show node -a
+expect "passphrase:"
+send \"$PW\\r\"
+expect eof
+" > /tmp/node_address
+
+WALLET_ADDRESS=""
+while read line
+do
+    if [[ "$line" == *"cosmos"* ]];then
+        echo $line
+        WALLET_ADDRESS=$line
+        break
+    fi
+done < /tmp/node_address
+WALLET_ADDRESS=$(echo $WALLET_ADDRESS | sed "s/\n//g" | sed "s/\r//g")
+NODE_PUB_KEY=$(gaiad tendermint show-validator)
+NODE_ID=$(gaiad tendermint show-node-id)
 
 curl -X PUT $COUCHDB/wallet-address/$WALLET_ADDRESS -d "{\"type\":\"full-node\",\"node_pub_key\":\"$NODE_PUB_KEY\",\"node_id\":\"$NODE_ID\", \"wallet_alias\":\"$WALLET_ALIAS\"}"
 
-clif rest-server --laddr tcp://0.0.0.0:1317 > clif.txt 2>&1 &
-nodef start 2>/dev/null
+gaiacli rest-server --laddr tcp://0.0.0.0:1317 > gaiacli.txt 2>&1 &
+gaiad start 2>/dev/null
+

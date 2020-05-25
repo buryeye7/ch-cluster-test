@@ -5,10 +5,11 @@ SRC="$GOPATH/src/friday"
 
 cp -rf $GOPATH/src/ch-cluster-test/config/gaiad-config/* $HOME/.gaiad
 cp -rf $GOPATH/src/ch-cluster-test/config/gaiacli-config/* $HOME/.gaiacli
+sed -i "s/prometheus = false/prometheus = true/g" $HOME/.gaiad/config/config.toml
 
 gaiacli config chain-id testnet
 
-ps -ef | grep nodef | while read line
+ps -ef | grep gaiad | while read line
 do
     if [[ $line == *"gaiad"* ]];then
         target=$(echo $line |  awk -F' ' '{print $2}')
@@ -40,7 +41,7 @@ do
             break
         fi
     done < /tmp/node_address
-    wallet_address=$(echo $ADDRESS | sed "s/\n//g" | sed "s/\r//g")
+    wallet_address=$(echo $wallet_address | sed "s/\n//g" | sed "s/\r//g")
     curl -X PUT $COUCHDB/seed-wallet-info/$wallet_address -d "{\"wallet_alias\":\"node$i\"}"
 done
 

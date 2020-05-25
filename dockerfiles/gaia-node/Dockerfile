@@ -9,8 +9,8 @@ ENV PATH=$PATH:$HOME/.cargo/bin:$GOPATH/bin:$GOROOT/bin
 WORKDIR $HOME
 
 WORKDIR $GOPATH/src
-RUN git clone https://github.com/buryeye7/friday-cluster-test
-WORKDIR $GOPATH/src/friday-cluster-test
+RUN git clone https://github.com/buryeye7/ch-cluster-test
+WORKDIR $GOPATH/src/ch-cluster-test
 
 EXPOSE 26656/tcp
 EXPOSE 26657/tcp
