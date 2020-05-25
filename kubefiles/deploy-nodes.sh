@@ -123,13 +123,11 @@ curl -X PUT $COUCHDB/wallet-address
 curl -X PUT $COUCHDB/input-address
 curl -X PUT $COUCHDB/seed-wallet-info
 
-if false;then
-    for i in {1..20}
-    do
-        data=$(../hdacpy/make-wallet.py)
-        curl -X PUT $COUCHDB/input-address/$i -d "$data"  
-    done 
-fi
+for i in {1..10}
+do
+    data=$(../gaiapy/make-wallet.py)
+    curl -X PUT $COUCHDB/input-address/$i -d "$data"  
+done 
 
 INDEX=$((INDEX + 1))
 cat ./gaia-seed-desc/gaia-seed-template.yaml | sed "s/{NODE_NAME}/${NAME_ARRAY[$INDEX]}/g" | sed "s/{TARGET}/${TARGET}/g" | sed "s/{WALLET_CNT}/\"$HDAC_NODE_NO_WITH_SEED\"/g" > ./gaia-seed-desc/gaia-seed.yaml
@@ -164,8 +162,4 @@ cat ./grafana-desc/grafana-template.yaml | sed "s/{NODE_NAME}/${NAME_ARRAY[$INDE
 kubectl apply -f grafana-desc/grafana.yaml
     
 cd ../gaiapy
-if [ $1 == "friday" ];then
-    ./test.sh 5
-else
-    ./test.sh 10
-fi
+./test.sh 10

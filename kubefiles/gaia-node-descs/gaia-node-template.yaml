@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hdac-node{NO}
+  name: gaia-node{NO}
   labels:
-    app: hdac-node{NO}
+    app: gaia-node{NO}
 spec:
   selector:
     matchLabels:
-      app: hdac-node{NO}
+      app: gaia-node{NO}
   replicas: 1
   template:
     metadata:
       labels:
-        app: hdac-node{NO}
+        app: gaia-node{NO}
     spec:
       containers:
-        - name: hdac-node{NO}
-          image: buryeye7/hdac-node:latest
+        - name: gaia-node{NO}
+          image: buryeye7/gaia-node:latest
           command: ["./scripts/start-node.sh"]
           env:
             - name: TARGET
@@ -41,11 +41,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hdac-node{NO}
+  name: gaia-node{NO}
 spec:
   type: LoadBalancer
   selector:
-    app: hdac-node{NO}
+    app: gaia-node{NO}
   ports:
     - protocol: TCP
       port: 1317
