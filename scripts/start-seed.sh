@@ -11,7 +11,7 @@ do
     fi
 done
 
-NODE_ID=$(nodef tendermint show-node-id)
+#NODE_ID=$(nodef tendermint show-node-id)
 IP_ADDRESS=$(hostname -I)
 IP_ADDRESS=$(echo $IP_ADDRESS)
 
@@ -19,9 +19,9 @@ curl -X PUT $COUCHDB/seed-info/seed-info -d "{\"target\":\"${NODE_ID}@${IP_ADDRE
 
 for i in $(seq 1 $WALLET_CNT)
 do
-    wallet_address=$(clif keys show node$i -a)
+    wallet_address=$(gaiacli keys show node$i -a)
     curl -X PUT $COUCHDB/seed-wallet-info/$wallet_address -d "{\"wallet_alias\":\"node$i\"}"
 done
 
-clif rest-server --laddr tcp://0.0.0.0:1317 > clif.txt 2>&1 &
-nodef start 2>/dev/null
+#clif rest-server --laddr tcp://0.0.0.0:1317 > clif.txt 2>&1 &
+gaiad start 
