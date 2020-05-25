@@ -1,6 +1,7 @@
 #!/bin/bash
 
 COUCHDB="http://admin:admin@couchdb-app-svc:5984"
+PW="12345678"
 
 mkdir -p $HOME/.gaiad
 mkdir -p $HOME/.gaiacli
