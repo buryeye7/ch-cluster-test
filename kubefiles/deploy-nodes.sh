@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILE_NO=$(ls -l hdac-node-descs | grep ^- | wc -l)
+FILE_NO=$(ls -l gaia-node-descs | grep ^- | wc -l)
 FILE_NO=$(($FILE_NO -1))
 TOTAL_NO=$(kubectl get nodes | wc -l)
 #Grafana, Prometheus, CouchDB, HDAC SEED, Master Node and Title
@@ -53,7 +53,7 @@ wait_lb_ready() {
         pending_flag=0
         while read line
         do
-            if [[ $line == *"hdac-node"*"pending"* ]];then
+            if [[ $line == *"gaia-node"*"pending"* ]];then
                 sleep 1
                 pending_flag=1
                 break
@@ -75,17 +75,17 @@ kubectl config get-contexts
 #delete nodes
 for i in $(seq 1 $FILE_NO)
 do
-    kubectl delete -f ./hdac-node-descs/hdac-node$i.yaml
+    kubectl delete -f ./gaia-node-descs/gaia-node$i.yaml
 done
-cp ./hdac-node-descs/hdac-node-template.yaml /tmp
-rm -rf ./hdac-node-descs/*
-cp /tmp/hdac-node-template.yaml ./hdac-node-descs
+cp ./gaia-node-descs/gaia-node-template.yaml /tmp
+rm -rf ./gaia-node-descs/*
+cp /tmp/gaia-node-template.yaml ./gaia-node-descs
 
-#Grafana, Prometheus, CouchDB, hdac seed
+#Grafana, Prometheus, CouchDB, gaia seed
 kubectl delete -f ./couchdb-desc/couchdb.yaml
 kubectl delete -f ./prometheus-desc/prometheus.yaml
 kubectl delete -f ./grafana-desc/grafana.yaml
-kubectl delete -f ./hdac-seed-desc/hdac-seed.yaml
+kubectl delete -f ./gaia-seed-desc/gaia-seed.yaml
 
 
 NAME_ARRAY=()
@@ -125,23 +125,23 @@ curl -X PUT $COUCHDB/seed-wallet-info
 
 for i in {1..20}
 do
-    data=$(../hdacpy/make-wallet.py)
+    data=$(../gaiapy/make-wallet.py)
     curl -X PUT $COUCHDB/input-address/$i -d "$data"  
 done 
 
 INDEX=$((INDEX + 1))
-cat ./hdac-seed-desc/hdac-seed-template.yaml | sed "s/{NODE_NAME}/${NAME_ARRAY[$INDEX]}/g" | sed "s/{TARGET}/${TARGET}/g" | sed "s/{WALLET_CNT}/\"$HDAC_NODE_NO_WITH_SEED\"/g" > ./hdac-seed-desc/hdac-seed.yaml
-kubectl apply -f ./hdac-seed-desc/hdac-seed.yaml
-waiting_single "hdac-seed" 
+cat ./gaia-seed-desc/gaia-seed-template.yaml | sed "s/{NODE_NAME}/${NAME_ARRAY[$INDEX]}/g" | sed "s/{TARGET}/${TARGET}/g" | sed "s/{WALLET_CNT}/\"$HDAC_NODE_NO_WITH_SEED\"/g" > ./gaia-seed-desc/gaia-seed.yaml
+kubectl apply -f ./gaia-seed-desc/gaia-seed.yaml
+waiting_single "gaia-seed" 
 
 for i in $(seq 1 $HDAC_NODE_NO)
 do
     INDEX=$((INDEX + 1))
-    cat ./hdac-node-descs/hdac-node-template.yaml | sed "s/{NODE_NAME}/${NAME_ARRAY[$INDEX]}/g" | sed "s/{NO}/$i/g" | sed "s/{TARGET}/${TARGET}/g" | sed "s/{WALLET_ALIAS}/node$i/g" > ./hdac-node-descs/hdac-node$i.yaml
-    kubectl apply -f ./hdac-node-descs/hdac-node$i.yaml
+    cat ./gaia-node-descs/gaia-node-template.yaml | sed "s/{NODE_NAME}/${NAME_ARRAY[$INDEX]}/g" | sed "s/{NO}/$i/g" | sed "s/{TARGET}/${TARGET}/g" | sed "s/{WALLET_ALIAS}/node$i/g" > ./gaia-node-descs/gaia-node$i.yaml
+    kubectl apply -f ./gaia-node-descs/gaia-node$i.yaml
 done
 
-waiting_multi "hdac-node" $HDAC_NODE_NO
+waiting_multi "gaia-node" $HDAC_NODE_NO
 waiting_ready
 
 #make prometheus config
@@ -161,7 +161,7 @@ NDEX=$((INDEX + 1))
 cat ./grafana-desc/grafana-template.yaml | sed "s/{NODE_NAME}/${NAME_ARRAY[$INDEX]}/g" > ./grafana-desc/grafana.yaml
 kubectl apply -f grafana-desc/grafana.yaml
     
-cd ../hdacpy
+cd ../gaiapy
 if [ $1 == "friday" ];then
     ./test.sh 5
 else
