@@ -1,73 +1,77 @@
 #!/bin/bash
 
 SRC="$GOPATH/src/friday"
-rm -rf $HOME/.nodef/config
-rm -rf $HOME/.nodef/data
-rm -rf $HOME/.clif
+rm -rf $HOME/.gaiad
+rm -rf $HOME/.gaiacli
 
-ps -ef | grep grpc | while read line
+ps -ef | grep gaiad | while read line
 do
-    if [[ $line == *"CasperLabs"* ]];then
+    if [[ $line == *"gaiad"* ]];then
         target=$(echo $line |  awk -F' ' '{print $2}')
         kill -9 $target
     fi
 done
-
-ps -ef | grep nodef | while read line
-do
-    if [[ $line == *"nodef"* ]];then
-        target=$(echo $line |  awk -F' ' '{print $2}')
-        kill -9 $target
-    fi
-done
-
-# run execution engine grpc server
-$SRC/CasperLabs/execution-engine/target/release/casperlabs-engine-grpc-server -t 8 $HOME/.casperlabs/.casper-node.sock&
 
 # init node
-nodef init testnode --chain-id testnet
+gaiad init --chain-id testnet testnet
 
-sed -i "s/prometheus = false/prometheus = true/g" ~/.nodef/config/config.toml
-
-# copy execution engine chain configurations
-cp $SRC/x/executionlayer/resources/manifest.toml ~/.nodef/config
+#sed -i "s/prometheus = false/prometheus = true/g" ~/.nodef/config/config.toml
 
 # create a wallet key
-
 PW="12345678"
-
 expect -c "
 set timeout 3
-spawn clif keys add node1
-expect "disk:"
+spawn gaiacli keys add node
+expect "passphrase:"
 send \"$PW\\r\"
 expect "passphrase:"
 send \"$PW\\r\"
 expect eof
 "
-nodef add-genesis-account $(clif keys show node1 -a) 100000000stake
-nodef add-el-genesis-account node1 "100000000000000000000000000000000000000" "1000000000000000000"
 
-# add genesis node
-nodef load-chainspec $HOME/.nodef/config/manifest.toml
+for i in {1..100}
+do
+	expect -c "
+	set timeout 3
+	spawn gaiacli keys add node$i
+	expect "passphrase:"
+	send \"$PW\\r\"
+	expect eof
+	"
+done
 
-# apply default clif configure
-clif config chain-id testnet
-clif config output json
-clif config indent true
-clif config trust-node true
+expect -c "
+spawn gaiacli keys show node -a
+expect "passphrase:"
+send \"$PW\\r\"
+expect eof
+" > /tmp/node_address
 
-# prepare genesis status
+ADDRESS=""
+while read line
+do
+	if [[ "$line" == *"cosmos"* ]];then 
+		echo $line
+		ADDRESS=$line	
+		break
+	fi	
+done < /tmp/node_address
+ADDRESS=$(echo $ADDRESS | sed "s/\n//g" | sed "s/\r//g") 
+
+gaiad add-genesis-account $ADDRESS 1000000000stake,100000000000000000000atom
+
 expect -c "
 set timeout 3
-spawn nodef gentx --name node1
-expect "\'node1\':"
-    send \"$PW\\r\"
+spawn gaiad gentx --name node
+expect "passphrase:"
+send \"$PW\\r\"
+expect "passphrase:"
+send \"$PW\\r\"
+expect "passphrase:"
+send \"$PW\\r\"
 expect eof
 "
 
-nodef collect-gentxs
-nodef validate-genesis
+gaiad collect-gentxs
 
-cat $HOME/.nodef/config/genesis.json | jq .app_state.genutil.gentxs[0].value.memo > address.txt
-#nodef start > nodef.txt
+#gaiad start
