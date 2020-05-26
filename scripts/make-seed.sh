@@ -14,7 +14,6 @@ done
 
 # init node
 gaiad init --chain-id testnet testnet
-
 #sed -i "s/prometheus = false/prometheus = true/g" ~/.nodef/config/config.toml
 
 # create a wallet key
@@ -22,7 +21,7 @@ PW="12345678"
 expect -c "
 set timeout 3
 spawn gaiacli keys add node
-expect "passphrase:"
+expect "disk:"
 send \"$PW\\r\"
 expect "passphrase:"
 send \"$PW\\r\"
@@ -34,44 +33,23 @@ do
 	expect -c "
 	set timeout 3
 	spawn gaiacli keys add node$i
+	expect "disk:"
+	send \"$PW\\r\"
 	expect "passphrase:"
 	send \"$PW\\r\"
 	expect eof
 	"
 done
 
-expect -c "
-spawn gaiacli keys show node -a
-expect "passphrase:"
-send \"$PW\\r\"
-expect eof
-" > /tmp/node_address
-
-ADDRESS=""
-while read line
-do
-	if [[ "$line" == *"cosmos"* ]];then 
-		echo $line
-		ADDRESS=$line	
-		break
-	fi	
-done < /tmp/node_address
-ADDRESS=$(echo $ADDRESS | sed "s/\n//g" | sed "s/\r//g") 
-
-gaiad add-genesis-account $ADDRESS 1000000000stake,100000000000000000000atom
+gaiad add-genesis-account node 1000000000stake,100000000000000000000atom
 
 expect -c "
 set timeout 3
 spawn gaiad gentx --name node
-expect "passphrase:"
-send \"$PW\\r\"
-expect "passphrase:"
-send \"$PW\\r\"
-expect "passphrase:"
+expect "\'node\':"
 send \"$PW\\r\"
 expect eof
 "
-
 gaiad collect-gentxs
 
 #gaiad start
