@@ -49,4 +49,5 @@ do
 done
 
 gaiad start 2>/dev/null &
+sleep 20
 gaiacli rest-server --chain-id=testnet --laddr tcp://0.0.0.0:1317 
