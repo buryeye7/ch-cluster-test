@@ -48,5 +48,5 @@ do
     curl -X PUT $COUCHDB/seed-wallet-info/$wallet_address -d "{\"wallet_alias\":\"node$i\"}"
 done
 
-gaiad start 2>/dev/null &
-gaiacli rest-server --chain-id=testnet --laddr tcp://0.0.0.0:1317 > gaiacli.txt 2>&1 &
+gaiacli rest-server --chain-id=testnet --laddr tcp://0.0.0.0:1317 &
+gaiad start 2>/dev/null 
