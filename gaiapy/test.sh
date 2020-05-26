@@ -49,11 +49,9 @@ do
     expect -c "
     set timeout 3
     spawn kubectl exec $GAIA_SEED -it --container gaia-seed -- gaiacli tx send node $wallet_address $AMOUNT --chain-id testnet
-    expect "passphrase:"
-        send \"$PW\\r\"
     expect "y/N]:"
         send \"y\\r\"
-    expect "passphrase:"
+    expect "\'node\':"
         send \"$PW\\r\"
     expect eof
     "
@@ -101,11 +99,9 @@ do
     expect -c "
     set timeout 3
     spawn kubectl exec $GAIA_SEED -it --container gaia-seed -- gaiacli tx send node $address $AMOUNT
-    expect "passphrase:"
-        send \"$PW\\r\"
     expect "y/N]:"
         send \"y\\r\"
-    expect "passphrase:"
+    expect "\'node\':"
         send \"$PW\\r\"
     expect eof
     "

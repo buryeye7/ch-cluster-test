@@ -28,23 +28,7 @@ curl -X PUT $COUCHDB/seed-info/seed-info -d "{\"target\":\"${NODE_ID}@${IP_ADDRE
 
 for i in $(seq 1 $WALLET_CNT)
 do
-    expect -c "
-    spawn gaiacli keys show node$i -a
-    expect "passphrase:"
-    send \"$PW\\r\"
-    expect eof
-    " > /tmp/node_address
-
-    wallet_address=""
-    while read line
-    do
-        if [[ "$line" == *"cosmos"* ]];then
-            echo $line
-            wallet_address=$line
-            break
-        fi
-    done < /tmp/node_address
-    wallet_address=$(echo $wallet_address | sed "s/\n//g" | sed "s/\r//g")
+    wallet_address=$(gaiacli keys show node$i -a)
     curl -X PUT $COUCHDB/seed-wallet-info/$wallet_address -d "{\"wallet_alias\":\"node$i\"}"
 done
 

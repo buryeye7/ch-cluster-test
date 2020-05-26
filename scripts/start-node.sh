@@ -21,7 +21,7 @@ PW="12345678"
 expect -c "
 set timeout 3
 spawn gaiacli keys add node
-expect "passphrase:"
+expect "disk:"
 send \"$PW\\r\"
 expect "passphrase:"
 send \"$PW\\r\"
@@ -34,24 +34,7 @@ SEED=$(curl $COUCHDB/seed-info/seed-info | jq .target)
 sed -i "s/seeds = \"\"/seeds = $SEED/g" $HOME/.gaiad/config/config.toml
 sed -i "s/prometheus = false/prometheus = true/g" $HOME/.gaiad/config/config.toml
 
-expect -c "
-spawn gaiacli keys show node -a
-expect "passphrase:"
-send \"$PW\\r\"
-expect eof
-" > /tmp/node_address
-
-WALLET_ADDRESS=""
-while read line
-do
-    if [[ "$line" == *"cosmos"* ]];then
-        echo $line
-        WALLET_ADDRESS=$line
-        break
-    fi
-done < /tmp/node_address
-
-WALLET_ADDRESS=$(echo $WALLET_ADDRESS | sed "s/\n//g" | sed "s/\r//g")
+WALLET_ADDRESS=$(gaiacli keys show node -a)
 NODE_PUB_KEY=$(gaiad tendermint show-validator)
 NODE_ID=$(gaiad tendermint show-node-id)
 
