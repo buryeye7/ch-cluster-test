@@ -29,6 +29,7 @@ curl -X PUT $COUCHDB/seed-info/seed-info -d "{\"target\":\"${NODE_ID}@${IP_ADDRE
 for i in $(seq 1 $WALLET_CNT)
 do
     wallet_address=$(gaiacli keys show node$i -a)
+    echo $wallet_address
     curl -X PUT $COUCHDB/seed-wallet-info/$wallet_address -d "{\"wallet_alias\":\"node$i\"}"
 done
 
