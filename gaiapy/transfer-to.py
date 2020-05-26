@@ -5,10 +5,10 @@ import sys
 import requests
 import json
 
-#host="http://" + sys.argv[1] + ":1317/txs"
-host="https://stargate.cosmos.network/txs"
-#privkey=sys.argv[2]
-privkey="ef10157a847bf6d99d25bc1c4b9c99c3230538ceaa918703a6fe50dd7c502071"
+#privkey="ef10157a847bf6d99d25bc1c4b9c99c3230538ceaa918703a6fe50dd7c502071"
+#host="http://localhost:1317/txs"
+host="http://" + sys.argv[1] + ":1317/txs"
+privkey=sys.argv[2]
 print("host " + host)
 print("privkey " + privkey)
 
