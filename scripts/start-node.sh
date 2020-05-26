@@ -57,6 +57,6 @@ NODE_ID=$(gaiad tendermint show-node-id)
 
 curl -X PUT $COUCHDB/wallet-address/$WALLET_ADDRESS -d "{\"type\":\"full-node\",\"node_pub_key\":\"$NODE_PUB_KEY\",\"node_id\":\"$NODE_ID\", \"wallet_alias\":\"$WALLET_ALIAS\"}"
 
-gaiad start 2>/dev/null
+gaiad start 2>/dev/null &
 gaiacli rest-server --chain-id=testnet --laddr tcp://0.0.0.0:1317 > gaiacli.txt &
 
