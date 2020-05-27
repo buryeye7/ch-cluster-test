@@ -1,5 +1,5 @@
 {
-  "genesis_time": "2020-05-26T07:20:23.062053773Z",
+  "genesis_time": "2020-05-27T06:27:31.260839094Z",
   "chain_id": "testnet",
   "consensus_params": {
     "block": {
@@ -18,27 +18,6 @@
   },
   "app_hash": "",
   "app_state": {
-    "bank": {
-      "send_enabled": true
-    },
-    "crisis": {
-      "constant_fee": {
-        "denom": "stake",
-        "amount": "1000"
-      }
-    },
-    "supply": {
-      "supply": []
-    },
-    "auth": {
-      "params": {
-        "max_memo_characters": "256",
-        "tx_sig_limit": "7",
-        "tx_size_cost_per_byte": "10",
-        "sig_verify_cost_ed25519": "590",
-        "sig_verify_cost_secp256k1": "1000"
-      }
-    },
     "gov": {
       "starting_proposal_id": "1",
       "deposits": null,
@@ -62,6 +41,28 @@
         "veto": "0.334000000000000000"
       }
     },
+    "auth": {
+      "params": {
+        "max_memo_characters": "256",
+        "tx_sig_limit": "7",
+        "tx_size_cost_per_byte": "10",
+        "sig_verify_cost_ed25519": "590",
+        "sig_verify_cost_secp256k1": "1000"
+      }
+    },
+    "slashing": {
+      "params": {
+        "max_evidence_age": "120000000000",
+        "signed_blocks_window": "100",
+        "min_signed_per_window": "0.500000000000000000",
+        "downtime_jail_duration": "600000000000",
+        "slash_fraction_double_sign": "0.050000000000000000",
+        "slash_fraction_downtime": "0.010000000000000000"
+      },
+      "signing_infos": {},
+      "missed_blocks": {}
+    },
+    "params": null,
     "distribution": {
       "fee_pool": {
         "community_pool": []
@@ -79,32 +80,8 @@
       "delegator_starting_infos": [],
       "validator_slash_events": []
     },
-    "slashing": {
-      "params": {
-        "max_evidence_age": "120000000000",
-        "signed_blocks_window": "100",
-        "min_signed_per_window": "0.500000000000000000",
-        "downtime_jail_duration": "600000000000",
-        "slash_fraction_double_sign": "0.050000000000000000",
-        "slash_fraction_downtime": "0.010000000000000000"
-      },
-      "signing_infos": {},
-      "missed_blocks": {}
-    },
-    "params": null,
-    "mint": {
-      "minter": {
-        "inflation": "0.130000000000000000",
-        "annual_provisions": "0.000000000000000000"
-      },
-      "params": {
-        "mint_denom": "stake",
-        "inflation_rate_change": "0.130000000000000000",
-        "inflation_max": "0.200000000000000000",
-        "inflation_min": "0.070000000000000000",
-        "goal_bonded": "0.670000000000000000",
-        "blocks_per_year": "6311520"
-      }
+    "supply": {
+      "supply": []
     },
     "genutil": {
       "gentxs": [
@@ -127,9 +104,9 @@
                     "max_change_rate": "0.010000000000000000"
                   },
                   "min_self_delegation": "1",
-                  "delegator_address": "cosmos1v24r6vzl8jnm27n04ujvneth994rykthtmntuf",
-                  "validator_address": "cosmosvaloper1v24r6vzl8jnm27n04ujvneth994rykthw087s6",
-                  "pubkey": "cosmosvalconspub1zcjduepq0rhl3vy7zevqvx7ywhp6hce3kkva0a3d8zmxm7x50c2fdrhjfgasejgua7",
+                  "delegator_address": "cosmos1ta5023vf4ydyg2g52wns86l2493pwq90550ywl",
+                  "validator_address": "cosmosvaloper1ta5023vf4ydyg2g52wns86l2493pwq903qm3zv",
+                  "pubkey": "cosmosvalconspub1zcjduepq0nnwpesnrh3yf2tjtlrxhstyqvz3uhg30s8g32csg9tsh7hj0kvq5nlfxw",
                   "value": {
                     "denom": "stake",
                     "amount": "100000000"
@@ -145,15 +122,64 @@
               {
                 "pub_key": {
                   "type": "tendermint/PubKeySecp256k1",
-                  "value": "Aim0Ni/nTABhVGKth3t3UdXFyALHziSAgbAVZ2RSrwG/"
+                  "value": "AmZJUvvqTGKZ2I0NTMlfNz9OVIT2KP8JfbuFDn/VLcqK"
                 },
-                "signature": "E5F8D7LLg6U/KsE+Xsl4acLulflDGCjfEunniD8ce343V2GVWinCY6OMzBSrDoYCDpxtUInBgorpyPZnWVPUYw=="
+                "signature": "TZJgkpfFJqSAjDG/hj4RleqpX0lFjGJyi5wCueo+BCtR70X5fNLXpYgwZMMLgJD/KZYHnGEGZphflPYz6QipNQ=="
               }
             ],
-            "memo": "5d7ab5e97ca88062a0790e1ff7fc6edd8470b265@10.0.0.48:26656"
+            "memo": "dbe8af262d58e36a976428a09d169f0ce87b1cc0@10.0.0.48:26656"
           }
         }
       ]
+    },
+    "mint": {
+      "minter": {
+        "inflation": "0.130000000000000000",
+        "annual_provisions": "0.000000000000000000"
+      },
+      "params": {
+        "mint_denom": "stake",
+        "inflation_rate_change": "0.130000000000000000",
+        "inflation_max": "0.200000000000000000",
+        "inflation_min": "0.070000000000000000",
+        "goal_bonded": "0.670000000000000000",
+        "blocks_per_year": "6311520"
+      }
+    },
+    "accounts": [
+      {
+        "address": "cosmos1ta5023vf4ydyg2g52wns86l2493pwq90550ywl",
+        "coins": [
+          {
+            "denom": "stake",
+            "amount": "1000000000"
+          },
+          {
+            "denom": "uatom",
+            "amount": "100000000000000000000"
+          }
+        ],
+        "sequence_number": "0",
+        "account_number": "0",
+        "original_vesting": [],
+        "delegated_free": [],
+        "delegated_vesting": [],
+        "start_time": "0",
+        "end_time": "0",
+        "module_name": "",
+        "module_permissions": [
+          ""
+        ]
+      }
+    ],
+    "bank": {
+      "send_enabled": true
+    },
+    "crisis": {
+      "constant_fee": {
+        "denom": "stake",
+        "amount": "1000"
+      }
     },
     "staking": {
       "params": {
@@ -169,32 +195,6 @@
       "unbonding_delegations": null,
       "redelegations": null,
       "exported": false
-    },
-    "accounts": [
-      {
-        "address": "cosmos1v24r6vzl8jnm27n04ujvneth994rykthtmntuf",
-        "coins": [
-          {
-            "denom": "atom",
-            "amount": "100000000000000000000"
-          },
-          {
-            "denom": "stake",
-            "amount": "1000000000"
-          }
-        ],
-        "sequence_number": "0",
-        "account_number": "0",
-        "original_vesting": [],
-        "delegated_free": [],
-        "delegated_vesting": [],
-        "start_time": "0",
-        "end_time": "0",
-        "module_name": "",
-        "module_permissions": [
-          ""
-        ]
-      }
-    ]
+    }
   }
 }

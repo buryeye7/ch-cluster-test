@@ -41,7 +41,7 @@ do
 	"
 done
 
-gaiad add-genesis-account node 1000000000stake,100000000000000000000atom
+gaiad add-genesis-account node 1000000000stake,100000000000000000000uatom
 
 expect -c "
 set timeout 3
