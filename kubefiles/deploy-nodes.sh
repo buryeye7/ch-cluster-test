@@ -1,5 +1,7 @@
 #!/bin/bash
 
+../gaiapy/kill-transfer-to.sh
+
 FILE_NO=$(ls -l gaia-node-descs | grep ^- | wc -l)
 FILE_NO=$(($FILE_NO -1))
 TOTAL_NO=$(kubectl get nodes | wc -l)
